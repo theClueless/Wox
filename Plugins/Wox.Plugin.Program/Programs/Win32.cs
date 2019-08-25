@@ -284,8 +284,8 @@ namespace Wox.Plugin.Program.Programs
             var programs1 = paths.AsParallel().Where(p => Extension(p) == ShortcutExtension).Select(LnkProgram);
             var programs2 = paths.AsParallel().Where(p => Extension(p) == ApplicationReferenceExtension).Select(Win32Program);
             // Include paths from suffixes other than the two extentions above 
-            var programs3 = paths.AsParallel().Where(p => Extension(p) == ShortcutExtension
-                                                        && Extension(p) == ApplicationReferenceExtension)
+            var programs3 = paths.AsParallel().Where(p => Extension(p) != ShortcutExtension
+                                                        && Extension(p) != ApplicationReferenceExtension)
                                                 .Select(Win32Program);
             var programs = programs1.Concat(programs2).Concat(programs3).Where(p => p.Valid);
             return programs;
