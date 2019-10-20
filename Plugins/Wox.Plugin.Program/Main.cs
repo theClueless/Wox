@@ -23,7 +23,7 @@ namespace Wox.Plugin.Program
 
         private static BinaryStorage<Win32[]> _win32Storage;
         private static BinaryStorage<UWP.Application[]> _uwpStorage;
-        private static Settings _settings;
+        private readonly Settings _settings;
         private readonly PluginJsonStorage<Settings> _settingsStorage;
 
         public Main()
@@ -57,9 +57,11 @@ namespace Wox.Plugin.Program
         {
             lock (IndexLock)
             {
-                var results1 = _win32s.AsParallel().Select(p => p.Result(query.Search, _context.API));
-                var results2 = _uwps.AsParallel().Select(p => p.Result(query.Search, _context.API));
-                var result = results1.Concat(results2).Where(r => r.Score > 0).ToList();
+                var results1 = _win32s.AsParallel().Select(p => p.Result(query.Search, _context.API, _settings));
+                var results2 = _uwps.AsParallel().Select(p => p.Result(query.Search, _context.API, _settings));
+                var result = results1
+                    .Concat(results2)
+                    .Where(r => r.Score > 0).ToList();
                 return result;
             }
         }
@@ -69,13 +71,13 @@ namespace Wox.Plugin.Program
             _context = context;
         }
 
-        public static void IndexPrograms()
+        public void IndexPrograms()
         {
             Win32[] w = { };
             UWP.Application[] u = { };
             var t1 = Task.Run(() =>
             {
-                w = Win32.All(_settings);
+            w = Win32.All(_settings);
             });
             var t2 = Task.Run(() =>
             {
@@ -101,7 +103,7 @@ namespace Wox.Plugin.Program
 
         public Control CreateSettingPanel()
         {
-            return new ProgramSetting(_context, _settings);
+            return new ProgramSetting(_context, _settings, this);
         }
 
         public string GetTranslatedPluginTitle()
