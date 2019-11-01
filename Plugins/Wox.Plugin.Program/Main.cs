@@ -72,11 +72,11 @@ namespace Wox.Plugin.Program
             {
                 var results1 = _win32s.AsParallel()
                     .Where(p => p.Enabled)
-                    .Select(p => p.Result(query.Search, _context.API));
+                    .Select(p => p.Result(query.Search, _context.API, _settings));
 
                 var results2 = _uwps.AsParallel()
                     .Where(p => p.Enabled)
-                    .Select(p => p.Result(query.Search, _context.API));
+                    .Select(p => p.Result(query.Search, _context.API, _settings));
 
                 var result = results1.Concat(results2).Where(r => r.Score > 0).ToList();
                 return result;
