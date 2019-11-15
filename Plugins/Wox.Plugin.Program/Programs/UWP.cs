@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -86,6 +86,8 @@ namespace Wox.Plugin.Program.Programs
                 var e = Marshal.GetExceptionForHR((int)hResult);
                 ProgramLogger.LogException($"|UWP|InitializeAppInfo|{path}" +
                                                 "|Error caused while trying to get the details of the UWP program", e);
+
+                Apps = new List<Application>().ToArray();
             }
         }
 
@@ -157,15 +159,15 @@ namespace Wox.Plugin.Program.Programs
 #if !DEBUG
                     catch (Exception e)
                     {
-                        ProgramLogger.LogException("|UWP|All|An unexpected error occured and "
+                        ProgramLogger.LogException($"|UWP|All|{p.InstalledLocation}|An unexpected error occured and "
                                                         + $"unable to convert Package to UWP for {p.Id.FullName}", e);
                         return new Application[] { };
                     }
 #endif
 #if DEBUG //make developer aware and implement handling
-                    catch(Exception)
+                    catch(Exception e)
                     {
-                        throw;
+                        throw e;
                     }
 #endif
                     return u.Apps;
@@ -205,7 +207,7 @@ namespace Wox.Plugin.Program.Programs
                     }
                     catch (Exception e)
                     {
-                        ProgramLogger.LogException("|UWP|CurrentUserPackages|An unexpected error occured and "
+                        ProgramLogger.LogException("UWP" ,"CurrentUserPackages", $"id","An unexpected error occured and "
                                                    + $"unable to verify if package is valid", e);
                         return false;
                     }
@@ -263,23 +265,23 @@ namespace Wox.Plugin.Program.Programs
             public string LogoPath { get; set; }
             public UWP Package { get; set; }
 
-            private int Score(string query, bool shouldUsePinYin)
+            private int Score(string query)
             {
                 var score1 = StringMatcher.FuzzySearch(query, DisplayName).ScoreAfterSearchPrecisionFilter();
-                var score2 = shouldUsePinYin ? StringMatcher.ScoreForPinyin(DisplayName, query) : 0;
+                var score2 = StringMatcher.ScoreForPinyin(DisplayName, query);
                 var score3 = StringMatcher.FuzzySearch(query, Description).ScoreAfterSearchPrecisionFilter();
-                var score4 = shouldUsePinYin ? StringMatcher.ScoreForPinyin(Description, query) : 0;
+                var score4 = StringMatcher.ScoreForPinyin(Description, query);
                 var score = new[] { score1, score2, score3, score4 }.Max();
                 return score;
             }
 
-            public Result Result(string query, IPublicAPI api, Settings settings)
+            public Result Result(string query, IPublicAPI api)
             {
                 var result = new Result
                 {
                     SubTitle = Package.Location,
                     Icon = Logo,
-                    Score = Score(query, settings.ShouldUsePinYin),
+                    Score = Score(query),
                     ContextData = this,
                     Action = e =>
                     {

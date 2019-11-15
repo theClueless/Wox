@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
@@ -16,7 +16,6 @@
             <StackPanel Orientation="Vertical" Width="205">
                 <CheckBox Name="StartMenuEnabled" Click="StartMenuEnabled_Click" Margin="5" Content="{DynamicResource wox_plugin_program_index_start}" />
                 <CheckBox Name="RegistryEnabled" Click="RegistryEnabled_Click"  Margin="5" Content="{DynamicResource wox_plugin_program_index_registry}" />
-                <CheckBox Name="ShouldUsePinYin" Click="ShouldUsePinYin_Click" Margin="5" Content="{DynamicResource wox_plugin_program_use_pinyin}"/>
             </StackPanel>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button Height="30" HorizontalAlignment="Right" Margin="10" Width="100" x:Name="btnLoadAllProgramSource" Click="btnLoadAllProgramSource_OnClick" Content="{DynamicResource wox_plugin_program_all_programs}" />
