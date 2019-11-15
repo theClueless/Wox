@@ -42,7 +42,6 @@ namespace Wox.Plugin.Program.Views
 
             StartMenuEnabled.IsChecked = _settings.EnableStartMenuSource;
             RegistryEnabled.IsChecked = _settings.EnableRegistrySource;
-            ShouldUsePinYin.IsChecked = _settings.ShouldUsePinYin;
         }
 
         private void ReIndexing()
@@ -164,12 +163,6 @@ namespace Wox.Plugin.Program.Views
         private void RegistryEnabled_Click(object sender, RoutedEventArgs e)
         {
             _settings.EnableRegistrySource = RegistryEnabled.IsChecked ?? false;
-            ReIndexing();
-        }
-
-        private void ShouldUsePinYin_Click(object sender, RoutedEventArgs e)
-        {
-            _settings.ShouldUsePinYin = ShouldUsePinYin.IsChecked ?? false;
             ReIndexing();
         }
 
