@@ -8,7 +8,7 @@ trigger:
 - dev
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'vs2017-win2016' #'windows-latest'
 
 variables:
   solution: '**/*.sln'
